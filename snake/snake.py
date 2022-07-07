@@ -90,3 +90,5 @@ def draw():
 
     food.collide()
     food.show()
+
+run(frame_rate=10)
