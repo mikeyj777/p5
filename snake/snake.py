@@ -22,7 +22,7 @@ class Snake:
         self.initialize()
 
     def initialize(self):
-        self.pos = Vector(randint(0, width // self.size) * size, randint(0, height // self.size) * self.size)
+        self.pos = Vector(randint(0, width // self.size) * self.size, randint(0, height // self.size) * self.size)
         self.tail = [self.pos]
         self.speed = Vector(0,0)
     
@@ -51,7 +51,42 @@ class Snake:
             self.speed = Vector(-1, 0)
         if kb.is_pressed('RIGHT'):
             self.speed = Vector(1, 0)
+
+class Food:
+
+    def __init__(self, snake):
+        self.snake = snake
+        self.init_posn()
+
+    def collide(self):
+        if self.pos == snake.pos:
+            self.init_posn()
+            self.snake.add()
+
+    def init_posn(self):
+        self.pos = Vector(randint(0, (width - self.snake.size) // self.snake.size) * self.snake.size, randint(0, (width - self.snake.size) // self.snake.size) * self.snake.size)
+        
+    def show(self):
+        no_stroke()
+        fill(255, 0, 0)
+        rect(self.pos, self.snake.size, self.snake.size)
+
+snake = Snake(20)
+food = Food(snake)
+
+def mouse_pressed():
+    snake.add()
+
 def setup():
     size(500, 500)
     title = "Snake Game"
 
+def draw():
+    background(255)
+
+    snake.control()
+    snake.update()
+    snake.show()
+
+    food.collide()
+    food.show()
